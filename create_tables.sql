@@ -1,0 +1,56 @@
+CREATE TABLE PATIENTS (
+    pid INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(100),
+    age INT,
+    address VARCHAR(255),
+    phone VARCHAR(15),
+    height FLOAT,
+    weight FLOAT,
+    doctor INT
+);
+
+CREATE TABLE DOCTORS (
+    did INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(100),
+    phone VARCHAR(15),
+    -- specialty VARCHAR(100)
+    specialty INT,
+    FOREIGN KEY (specialty) REFERENCES DEPARTMENTS(dpmt_id)
+);
+
+CREATE TABLE DEPARTMENTS (
+    dpmt_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(100)
+);
+
+CREATE TABLE RECORDS (
+    rid INTEGER PRIMARY KEY AUTOINCREMENT,
+    pid INT,
+    did INT,
+    date DATE,
+    time TIME,
+    description TEXT,
+    FOREIGN KEY (pid) REFERENCES PATIENTS(pid),
+    FOREIGN KEY (did) REFERENCES DOCTORS(did)
+);
+
+CREATE TABLE SCHEDULE (
+    sid INTEGER PRIMARY KEY AUTOINCREMENT,
+    did INT,
+    pid INT,
+    date DATE,
+    time TIME,
+    description TEXT,
+    FOREIGN KEY (did) REFERENCES DOCTORS(did),
+    FOREIGN KEY (pid) REFERENCES PATIENTS(pid)
+);
+
+CREATE TABLE login_cred (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type INT CHECK(type IN (0, 1)), -- 0 for patient, 1 for doctor
+    uid INT,
+    passcode VARCHAR(255),
+    FOREIGN KEY (uid) REFERENCES PATIENTS(pid) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (uid) REFERENCES DOCTORS(did) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
